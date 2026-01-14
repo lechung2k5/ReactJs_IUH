@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="">Dolphins</label>
+    <input type="text" id = "aScore1" >
+    <input type="text" id = "aScore2" >
+    <input type="text" id = "aScore3" >
+    <label for="">Result:</label>
+    <input type="text" id="result1" disabled>
+    <br>
+    <label for="">Koalas</label>
+     <input type="text" id = "bScore1" >
+    <input type="text" id = "bScore2" >
+    <input type="text" id = "bScore3" >
+    <label for="">Result:</label>
+    <input type="text" id="result2" disabled>
+    <p id="txtResult"></p>
+    <br>
+    <input type="button" id="calculateAVG" value="Calculate AVG" onclick="calculateAVG()">
+    <script>
+        const calcAverage = (a, b, c) => (Number(a) + Number(b) + Number(c)) / 3;
+        const checkWinner = function(avgDolphins, avgKoalas){
+            let message = "";
+            if(avgDolphins > avgKoalas *2){
+                message = `Dolphins win (${avgDolphins.toFixed(1)} vs. ${avgKoalas.toFixed(1)})`;
+            }else if (avgDolphins * 2 < avgKoalas){
+                message = `Koalas win (${avgKoalas.toFixed(1)} vs. ${avgDolphins.toFixed(1)})`;
+            }else{
+                message = 'No team win';
+            }
+            document.getElementById("txtResult").textContent = message;
+            return message;
+        }
+        function calculateAVG() {
+            aScore1 = (document.getElementById("aScore1").value);
+            aScore2 = (document.getElementById("aScore2").value);
+            aScore3 = (document.getElementById("aScore3").value);
+           
+            bScore1 = (document.getElementById("bScore1").value);
+            bScore2 = (document.getElementById("bScore2").value);
+            bScore3 = (document.getElementById("bScore3").value);
+           
+            const avgDolphins = calcAverage(aScore1, aScore2, aScore3);
+            const avgKoalas = calcAverage(bScore1, bScore2, bScore3);
+
+            document.getElementById("result1").value = avgDolphins.toFixed(1);
+            document.getElementById("result2").value = avgKoalas.toFixed(1);
+            const resultText = checkWinner(avgDolphins, avgKoalas);
+            console.log(resultText);
+        }
+         
+    </script>
+</body>
+</html>

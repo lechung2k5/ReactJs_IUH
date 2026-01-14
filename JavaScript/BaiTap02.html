@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="">Mark</label>
+    <input type="text" id = "mass1" >
+    <input type="text" id = "height1" >
+    <label for="">Result:</label>
+    <input type="text" id="result1" >
+    <br>
+    <label for="">John</label>
+    <input type="text" id = "mass2" >
+    <input type="text" id = "height2" >
+    <br>
+    <input type="button" id="calculateBMI" value="Calculate BMI" onclick="calculateBMI()">
+    <label for="">Result:</label>
+    <input type="text" id="result2">
+ 
+    <script>
+        
+        var BMI = 0;
+        var mass = 0;
+        var height = 0;
+        var markBMI = 0;
+        var johnBMI = 0;
+        
+        function calculateBMI() {
+            mass = (document.getElementById("mass1").value);
+            height = (document.getElementById("height1").value);
+            markBMI = mass / (height * height);
+            console.log(markBMI);
+            document.getElementById("result1").value = markBMI.valueOf();
+            
+            mass = (document.getElementById("mass2").value);
+            height = (document.getElementById("height2").value);
+            johnBMI = mass / (height * height);
+            console.log(johnBMI);
+            document.getElementById("result2").value = johnBMI.valueOf();
+            
+            if (markBMI > johnBMI) {
+                console.log(`Mark's BMI (${markBMI.toFixed(1)}) is higher than John's (${johnBMI.toFixed(1)})!`);
+            } else {
+                console.log(`John's BMI (${johnBMI.toFixed(1)}) is higher than Mark's (${markBMI.toFixed(1)})!`);
+            }
+          
+        }
+         
+    </script>
+</body>
+</html>

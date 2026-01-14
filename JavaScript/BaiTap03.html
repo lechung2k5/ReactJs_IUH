@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <label for="">Dolphins</label>
+    <input type="text" id = "aScore1" >
+    <input type="text" id = "aScore2" >
+    <input type="text" id = "aScore3" >
+    <label for="">Result:</label>
+    <input type="text" id="result1" >
+    <br>
+    <label for="">Koalas</label>
+     <input type="text" id = "bScore1" >
+    <input type="text" id = "bScore2" >
+    <input type="text" id = "bScore3" >
+    <label for="">Result:</label>
+    <input type="text" id="result2">
+    <br>
+    <input type="button" id="calculateAVG" value="Calculate AVG" onclick="calculateAVG()">
+    <script>
+        
+        var avgDolphins = 0;
+        var avgKoalas = 0;  
+        var aScore1 = 0;
+        var aScore2 = 0;
+        var aScore3 = 0;
+        var bScore1 = 0;
+        var bScore2 = 0;
+        var bScore3 = 0;
+        
+        function calculateAVG() {
+            aScore1 = (document.getElementById("aScore1").value);
+            aScore2 = (document.getElementById("aScore2").value);
+            aScore3 = (document.getElementById("aScore3").value);
+            avgDolphins = (Number(aScore1) + Number(aScore2) + Number(aScore3)) / 3;
+            console.log(avgDolphins);
+            document.getElementById("result1").value = avgDolphins.valueOf();
+            bScore1 = (document.getElementById("bScore1").value);
+            bScore2 = (document.getElementById("bScore2").value);
+            bScore3 = (document.getElementById("bScore3").value);
+            avgKoalas = (Number(bScore1) + Number(bScore2) + Number(bScore3)) / 3;
+            console.log(avgKoalas);
+            document.getElementById("result2").value = avgKoalas.valueOf();
+            
+            if (avgDolphins > avgKoalas && avgDolphins >= 100) {
+                console.log(`Dolphins (${avgDolphins.toFixed(1)}) is champion than Koalas (${avgKoalas.toFixed(1)})!`);
+            } else if (avgKoalas > avgDolphins && avgKoalas >= 100) {
+                console.log(`Koalas (${avgKoalas.toFixed(1)}) is champion than Dolphins (${avgDolphins.toFixed(1)})!`);
+            } else if (avgKoalas === avgDolphins && avgKoalas >= 100 && avgDolphins >= 100) {
+                console.log(`Koalas (${avgKoalas.toFixed(1)}) and Dolphins (${avgDolphins.toFixed(1)}) draw!`);
+            } else {
+                console.log(`No team wins the trophy!`);
+            }
+          
+        }
+         
+    </script>
+</body>
+</html>
