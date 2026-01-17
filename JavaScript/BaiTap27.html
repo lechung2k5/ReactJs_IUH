@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Challenge #3 - Async/Await</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #222;
+            color: #fff;
+            padding: 30px;
+        }
+
+        .images {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        img {
+            width: 400px;
+            border-radius: 8px;
+            border: 3px solid #eee;
+        }
+
+        /* Style cho Part 2 */
+        .parallel {
+            border: 5px solid #ff007f;
+            width: 200px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Async/Await Image Loader</h1>
+    <div class="images"></div>
+
+    <script>
+        const imgContainer = document.querySelector('.images');
+
+        // Helper: Hàm tạo Promise đợi
+        const wait = function (seconds) {
+            return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+        };
+
+        // Helper: Hàm tạo ảnh (Challenge #2)
+        const createImage = function (imgPath) {
+            return new Promise(function (resolve, reject) {
+                const img = document.createElement('img');
+                img.src = imgPath;
+
+                img.addEventListener('load', function () {
+                    imgContainer.append(img);
+                    resolve(img);
+                });
+
+                img.addEventListener('error', function () {
+                    reject(new Error('Image not found at: ' + imgPath));
+                });
+            });
+        };
+
+        // --- PART 1: loadNPause ---
+        const loadNPause = async function () {
+            try {
+                let img = await createImage('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=500');
+                console.log('Image 1 loaded');
+                await wait(2);
+                img.style.display = 'none';
+
+                img = await createImage('https://images.unsplash.com/photo-1511576661531-b3fb3e444ff1?w=500');
+                console.log('Image 2 loaded');
+                await wait(2);
+                img.style.display = 'none';
+            } catch (err) {
+                console.error(`🔴 Error: ${err.message}`);
+            }
+        };
+
+        // --- PART 2: loadAll ---
+        const loadAll = async function (imgArr) {
+            try {
+                // Sử dụng .map để tạo mảng các Promise
+                const imgs = imgArr.map(async imgPath => await createImage(imgPath));
+
+                // Sử dụng Promise combinator để đợi tất cả ảnh tải xong song song
+                const imgsEl = await Promise.all(imgs);
+
+                // Thêm class 'parallel' cho tất cả ảnh
+                imgsEl.forEach(img => img.classList.add('parallel'));
+                console.log('All images loaded in parallel');
+            } catch (err) {
+                console.error(`🔴 Parallel Loading Error: ${err.message}`);
+            }
+        };
+
+        // Chạy TEST
+        // Lưu ý: Để test Part 2, hãy comment loadNPause() lại để tránh xung đột giao diện
+        // loadNPause();
+
+        const testImages = [
+            'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=500',
+            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=500',
+            'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=500'
+        ];
+
+        loadAll(testImages);
+    </script>
+</body>
+
+</html>

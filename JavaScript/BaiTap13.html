@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="content">
+        <table id="events-table" border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; max-width: 600px;">
+            <thead>
+                <tr>
+                    <th>Hiệp</th>
+                    <th>Phút</th>
+                    <th>Sự kiện</th>
+                </tr>
+            </thead>
+            <tbody id="events-tbody">
+            </tbody>
+        </table>
+    </div>
+    <script>
+      const gameEvents = new Map([
+            [17, '⚽ GOAL'],
+            [36, '🔁 Substitution'],
+            [47, '⚽ GOAL'],
+            [61, '🔁 Substitution'],
+            [64, '🔶 Yellow card'],
+            [69, '🔴 Red card'],
+            [70, '🔁 Substitution'],
+            [72, '🔁 Substitution'],
+            [76, '⚽ GOAL'],
+            [80, '⚽ GOAL'],
+            [92, '🔶 Yellow card'],
+        ]);  
+        const events = [...new Set(gameEvents.values())];
+        console.log(events);
+        gameEvents.delete(64);
+        const time = 90;
+        console.log(`An event happend, on average, every ${time / gameEvents.size} minutes`);
+        
+        // Hiển thị dữ liệu vào bảng
+        const tbody = document.getElementById('events-tbody');
+        for (const [min, event] of gameEvents){
+            const half = min <=45 ? 'Hiệp 1' : 'Hiệp 2';
+            console.log(`[${half} HALF] ${min}: ${event}`);
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${half}</td>
+                <td>${min}</td>
+                <td>${event}</td>
+            `;
+            tbody.appendChild(row);
+        }
+    </script>
+</body>
+</html>

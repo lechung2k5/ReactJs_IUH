@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast App</title>
+</head>
+<body>
+    <h3>Dự báo thời tiết</h3>
+    <button onclick="showForecast()">In dự báo ra màn hình</button>
+    
+    <p id="forecastDisplay" style="font-style: italic; color: #555;"></p>
+
+    <script>
+        const printForecast = (arr) => {
+            let str = "... ";
+            for (let i = 0; i < arr.length; i++) {
+                str += `${arr[i]}°C in ${i + 1} days ... `;
+            }
+            return str;
+        };
+
+        function showForecast() {
+            const data2 = [12, 5, -5, 0, 4];
+            const result = printForecast(data2);
+            
+            // Hiển thị kết quả lên thẻ p
+            document.getElementById("forecastDisplay").textContent = result;
+            console.log(result);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steven's Tip Calculator - Array Version</title>
+</head>
+<body>
+    <h3>Single Bill Calculator</h3>
+    <label>Tổng bill</label>
+    <input type="number" id="priceBill">
+    <input type="button" value="Tính tip" id="btnResult" onclick="btnResult()">
+    <br><br>
+    <label>% tip</label>
+    <input type="text" id="percent" disabled>
+    <label>Tiền tip:</label>
+    <input type="text" id="result" disabled>
+    <label>Số tiền phải trả:</label>
+    <input type="text" id="total" disabled>
+
+    <script>
+        // --- LOGIC BÀI TẬP (ARRAY) ---
+        const calcTip = (billValue) => {
+            const bill = Number(billValue);
+            return (bill >= 50 && bill <= 300) ? bill * 0.15 : bill * 0.2;
+        };
+
+        const bills = [125, 555, 44];
+        const tips = [calcTip(bills[0]), calcTip(bills[1]), calcTip(bills[2])];
+        const totals = [bills[0] + tips[0], bills[1] + tips[1], bills[2] + tips[2]];
+
+        console.log("Dữ liệu mảng theo yêu cầu:");
+        console.log("Bills:", bills);
+        console.log("Tips:", tips);
+        console.log("Totals:", totals);
+
+        // --- LOGIC GIAO DIỆN ---
+        function btnResult() {
+            const bill = Number(document.getElementById("priceBill").value);
+            const tip = calcTip(bill);
+            const percentValue = (bill >= 50 && bill <= 300) ? 15 : 20;
+
+            document.getElementById("percent").value = percentValue + "%";
+            document.getElementById("result").value = tip.toFixed(2);
+            document.getElementById("total").value = (bill + tip).toFixed(2);
+        }
+    </script>
+</body>
+</html>

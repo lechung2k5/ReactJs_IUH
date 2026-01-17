@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Car (EV) Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .car-controls {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 600px;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 900px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Electric Car (EV) Challenge - Inheritance & Polymorphism</h1>
+    
+    <div class="car-controls">
+        <h2>Tesla EV Controls</h2>
+        <button onclick="teslaEV.accelerate()">Accelerate</button>
+        <button onclick="teslaEV.brake()">Brake</button>
+        <button onclick="teslaEV.chargeBattery(90)">Charge to 90%</button>
+        <div class="info">
+            <p><strong>Current Speed:</strong> <span id="tesla-speed">120</span> km/h</p>
+            <p><strong>Battery Charge:</strong> <span id="tesla-charge">23</span>%</p>
+        </div>
+    </div>
+    
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        let logOutput = '';
+        
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        function Car(make, speed) {
+            this.make = make;
+            this.speed = speed;
+        }
+        
+        Car.prototype.accelerate = function() {
+            this.speed += 10;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+        };
+        
+        Car.prototype.brake = function() {
+            this.speed -= 5;
+            if (this.speed < 0) this.speed = 0;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+        };
+        
+        function EV(make, speed, charge) {
+            Car.call(this, make, speed);
+            this.charge = charge;
+        }
+        
+        EV.prototype = Object.create(Car.prototype);
+        EV.prototype.constructor = EV;
+        
+        EV.prototype.chargeBattery = function(chargeTo) {
+            this.charge = chargeTo;
+            console.log(`${this.make} battery charged to ${this.charge}%`);
+            this.updateDisplay();
+        };
+        
+        EV.prototype.accelerate = function() {
+            this.speed += 20;
+            this.charge -= 1;
+            if (this.charge < 0) this.charge = 0;
+            console.log(`${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}%`);
+            this.updateDisplay();
+        };
+        
+        EV.prototype.brake = function() {
+            Car.prototype.brake.call(this);
+            this.updateDisplay();
+        };
+        
+        EV.prototype.updateDisplay = function() {
+            if (this.make === 'Tesla') {
+                document.getElementById('tesla-speed').textContent = this.speed;
+                document.getElementById('tesla-charge').textContent = this.charge;
+            }
+        };
+        
+        const teslaEV = new EV('Tesla', 120, 23);
+        
+        console.log('=== Initial State ===');
+        console.log(`${teslaEV.make} at ${teslaEV.speed} km/h, with a charge of ${teslaEV.charge}%`);
+        
+        console.log('\n=== Testing accelerate (Polymorphism) ===');
+        console.log('Notice: EV.accelerate() increases speed by 20 (not 10) and decreases charge by 1%');
+        teslaEV.accelerate();
+        teslaEV.accelerate();
+        
+        console.log('\n=== Testing brake ===');
+        teslaEV.brake();
+        
+        console.log('\n=== Testing chargeBattery ===');
+        teslaEV.chargeBattery(90);
+        
+        console.log('\n=== Testing accelerate after charging ===');
+        teslaEV.accelerate();
+        teslaEV.accelerate();
+        
+        console.log('\n=== Polymorphism Explanation ===');
+        console.log('EV.accelerate() overrides Car.accelerate()');
+        console.log('When calling teslaEV.accelerate(), it uses EV\'s version, not Car\'s version');
+        console.log('This is polymorphism - same method name, different behavior based on object type');
+        
+        outputDiv.textContent = logOutput;
+    </script>
+</body>
+</html>

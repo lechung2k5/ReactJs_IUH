@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV ES6 Class with Chaining Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .car-controls {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 700px;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 900px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .chaining-demo {
+            background-color: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>EV ES6 Class with Method Chaining Challenge</h1>
+    
+    <div class="car-controls">
+        <h2>Rivian EV Controls</h2>
+        <button onclick="testIndividual()">Test Individual Methods</button>
+        <button onclick="testChaining()">Test Method Chaining</button>
+        <div class="info">
+            <p><strong>Current Speed:</strong> <span id="rivian-speed">120</span> km/h</p>
+            <p><strong>Battery Charge:</strong> <span id="rivian-charge">23</span>%</p>
+        </div>
+        <div class="chaining-demo">
+            <h3>Method Chaining Example:</h3>
+            <code>rivianEV.accelerate().accelerate().brake().chargeBattery(90).accelerate()</code>
+        </div>
+    </div>
+    
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        let logOutput = '';
+        
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        class CarCl {
+            constructor(make, speed) {
+                this.make = make;
+                this.speed = speed;
+            }
+            
+            accelerate() {
+                this.speed += 10;
+                console.log(`${this.make} is going at ${this.speed} km/h`);
+                return this;
+            }
+            
+            brake() {
+                this.speed -= 5;
+                if (this.speed < 0) this.speed = 0;
+                console.log(`${this.make} is going at ${this.speed} km/h`);
+                return this;
+            }
+            
+            get speedUS() {
+                return this.speed / 1.6;
+            }
+            
+            set speedUS(speedInMiH) {
+                this.speed = speedInMiH * 1.6;
+                console.log(`${this.make} speed set to ${this.speed} km/h (${speedInMiH} mi/h)`);
+            }
+        }
+        
+        class EVCl extends CarCl {
+            #charge;
+            
+            constructor(make, speed, charge) {
+                super(make, speed);
+                this.#charge = charge;
+            }
+            
+            chargeBattery(chargeTo) {
+                this.#charge = chargeTo;
+                console.log(`${this.make} battery charged to ${this.#charge}%`);
+                this.updateDisplay();
+                return this;
+            }
+            
+            accelerate() {
+                this.speed += 20;
+                this.#charge -= 1;
+                if (this.#charge < 0) this.#charge = 0;
+                console.log(`${this.make} going at ${this.speed} km/h, with a charge of ${this.#charge}%`);
+                this.updateDisplay();
+                return this;
+            }
+            
+            getCharge() {
+                return this.#charge;
+            }
+            
+            updateDisplay() {
+                if (this.make === 'Rivian') {
+                    document.getElementById('rivian-speed').textContent = this.speed;
+                    document.getElementById('rivian-charge').textContent = this.#charge;
+                }
+            }
+        }
+        
+        const rivianEV = new EVCl('Rivian', 120, 23);
+        
+        console.log('=== Initial State ===');
+        console.log(`${rivianEV.make} at ${rivianEV.speed} km/h, with a charge of ${rivianEV.getCharge()}%`);
+        console.log('Note: #charge is private, accessed via getCharge() method');
+        
+        function testIndividual() {
+            logOutput = '';
+            console.log('\n=== Testing Individual Methods ===');
+            rivianEV.speed = 120;
+            rivianEV.chargeBattery(23);
+            rivianEV.updateDisplay();
+            
+            console.log('\n--- Accelerate ---');
+            rivianEV.accelerate();
+            
+            console.log('\n--- Brake ---');
+            rivianEV.brake();
+            
+            console.log('\n--- Charge Battery ---');
+            rivianEV.chargeBattery(90);
+        }
+        
+        function testChaining() {
+            logOutput = '';
+            console.log('\n=== Testing Method Chaining ===');
+            rivianEV.speed = 120;
+            rivianEV.chargeBattery(23);
+            rivianEV.updateDisplay();
+            
+            console.log('\n--- Chain: accelerate().accelerate().brake().chargeBattery(90).accelerate() ---');
+            rivianEV
+                .accelerate()
+                .accelerate()
+                .brake()
+                .chargeBattery(90)
+                .accelerate();
+            
+            console.log('\n--- Chain: chargeBattery(100).accelerate().accelerate().brake() ---');
+            rivianEV
+                .chargeBattery(100)
+                .accelerate()
+                .accelerate()
+                .brake();
+            
+            console.log('\n=== Method Chaining Explanation ===');
+            console.log('Each method returns "this" to allow chaining');
+            console.log('You can call multiple methods in one line!');
+        }
+        
+        console.log('\n=== Initial Test ===');
+        testChaining();
+        
+        outputDiv.textContent = logOutput;
+    </script>
+</body>
+</html>

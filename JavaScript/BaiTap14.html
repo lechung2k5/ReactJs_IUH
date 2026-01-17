@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        document.body.append(document.createElement('textarea'));
+        document.body.append(document.createElement('button'));
+        const btn = document.querySelector('button');
+        btn.textContent = 'Convert now';
+        btn.addEventListener('click', function(){
+            const text = document.querySelector('textarea').value;
+            const rows = text.split('\n');
+            let conversionCount = 0;
+            for (const row of rows){
+                const trimmedRow = row.trim();
+                if (!trimmedRow) continue; 
+                const parts = trimmedRow.toLowerCase().split('_');
+                if (parts.length < 2) continue; 
+                const [first, second] = parts;
+                const output = `${first}${second.replace(
+                    second[0],
+                    second[0].toUpperCase()
+                )}`;
+                conversionCount++;
+                console.log(`${output.padEnd(20)}${'✅'.repeat(conversionCount)}`);
+            }
+        })
+    </script>
+</body>
+</html>

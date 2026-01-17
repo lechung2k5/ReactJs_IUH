@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIFE Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+        h1 {
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click anywhere on the page to change my color!</h1>
+    <div class="info">
+        <h3>Giải thích cách hoạt động:</h3>
+        <p><strong>IIFE (Immediately Invoked Function Expression)</strong> là một function được gọi ngay lập tức sau khi được định nghĩa.</p>
+        <p><strong>Closure:</strong> Khi IIFE chạy, nó tạo ra một scope riêng. Biến <code>header</code> được khai báo trong scope này và được "đóng gói" (closure) bởi callback function của event listener.</p>
+        <p><strong>Execution timing:</strong> IIFE chạy ngay khi trang load, lúc này nó select h1 và set màu đỏ. Sau đó nó attach event listener vào body. Callback function được định nghĩa nhưng CHƯA chạy - nó chỉ chạy khi user click vào body.</p>
+        <p><strong>Why it works:</strong> Mặc dù IIFE đã kết thúc, nhưng biến <code>header</code> vẫn tồn tại trong closure của callback function. Khi click body, callback được gọi và vẫn có thể truy cập biến <code>header</code> từ scope của IIFE đã kết thúc. Đây chính là sức mạnh của closure trong JavaScript!</p>
+    </div>
+    <script>
+        (function () {
+            const header = document.querySelector('h1');
+            header.style.color = 'red';
+            
+            document.body.addEventListener('click', function() {
+                header.style.color = 'blue';
+            });
+        })();
+    </script>
+</body>
+</html>

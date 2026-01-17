@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Soccer</title>
+</head>
+<body style="background-color: #222; color: #fff; font-family: sans-serif; padding: 20px;">
+    <h2>Football Betting Dashboard </h2>
+    <div id = "ui-output" style="background: #333; padding: 15px; border-radius: 8px; line-height: 1.6;">
+
+    </div>
+
+    <script>
+        const game = {
+            team1: 'Bayern Munich',
+            team2: 'Borrussia Dortmund',
+            players: [
+                ['Neuer', 'Pavard', 'Martinez', 'Alaba', 'Davies', 'Kimmich', 'Goretzka', 'Coman', 'Muller', 'Gnarby', 'Lewandowski'],
+                ['Burki', 'Schulz', 'Hummels', 'Akanji', 'Hakimi', 'Weigl', 'Witsel', 'Hazard', 'Brandt', 'Sancho', 'Gotze'],
+            ],
+            score: '4:0',
+            scored: ['Lewandowski', 'Gnarby', 'Lewandowski', 'Hummels'],
+            date: 'Nov 9th, 2037',
+            odds: { team1: 1.33, x: 3.25, team2: 6.5 },
+        }
+        const display = (text) => {
+            document.getElementById('ui-output').innerHTML += `<p>${text}</p>`;
+        }
+
+        const [players1, players2] = game.players;
+        const [gk, ...fieldPlayers] = players1; //... (Rest) ở đây đóng vai trò gom tất cả những người còn dư vào một mảng mới tên là fieldPlayers.
+        const allPlayers = [...players1, ...players2];
+        const players1Final = [...players1, 'Thiago', 'Coutinho', 'Perisic'];
+        const {odds: {team1, x:draw, team2}} = game;
+        const printGoals = function(...players){
+            display(`⚽ <b>Scored:</b> ${players.join(', ')} (Total: ${players.length} goals)`);
+            console.log('${players.length} goals were scored');
+        }
+        display(`Trận đấu: <b>${game.team1} vs ${game.team2}</b>`);
+        printGoals(...game.scored);
+    const predictWinner = () => 
+        (team1 < team2 && team1 < draw && (console.log('Team 1 is more likely to win'), `${game.team1} thắng`)) ||
+        (team2 < team1 && team2 < draw && (console.log('Team 2 is more likely to win'), `${game.team2} thắng`)) ||
+        (draw < team1 && draw < team2 && (console.log('A draw is more likely to happen'), "Kết quả Hòa")) ||
+        "Không thể dự đoán";
+
+    display(`Dự đoán: <b>${predictWinner()}</b>`);
+
+    </script>
+</body>
+</html>

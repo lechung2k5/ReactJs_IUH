@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Loading with Promises Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 800px;
+        }
+        .images {
+            min-height: 300px;
+            border: 2px dashed #ddd;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fafafa;
+        }
+        .images img {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 900px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Loading with Promises Challenge</h1>
+    
+    <div class="container">
+        <h2>Image Gallery</h2>
+        <div class="info">
+            <p><strong>Instructions:</strong></p>
+            <ul>
+                <li>Click "Load Images" to start loading images sequentially</li>
+                <li>Each image will display for 2 seconds before the next one loads</li>
+                <li>Test error handler with "Load Wrong Image" button</li>
+                <li>Set network speed to "Fast 3G" in DevTools to see loading effect</li>
+            </ul>
+        </div>
+        <button onclick="loadImages()">Load Images</button>
+        <button onclick="testError()">Test Error Handler</button>
+        <button onclick="clearImages()">Clear Images</button>
+        <div class="images" id="images-container">
+            <p style="color: #999;">Images will appear here...</p>
+        </div>
+    </div>
+    
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        const imagesContainer = document.getElementById('images-container');
+        let logOutput = '';
+        let currentImage = null;
+        
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            const message = args.join(' ');
+            logOutput += 'ERROR: ' + message + '\n';
+            originalError.apply(console, args);
+        };
+        
+        function wait(seconds) {
+            return new Promise(function(resolve) {
+                setTimeout(resolve, seconds * 1000);
+            });
+        }
+        
+        function createImage(imgPath) {
+            return new Promise(function(resolve, reject) {
+                const img = document.createElement('img');
+                img.src = imgPath;
+                
+                img.addEventListener('load', function() {
+                    imagesContainer.innerHTML = '';
+                    imagesContainer.appendChild(img);
+                    console.log(`Image loaded successfully: ${imgPath}`);
+                    resolve(img);
+                });
+                
+                img.addEventListener('error', function() {
+                    reject(new Error(`Failed to load image: ${imgPath}`));
+                });
+            });
+        }
+        
+        function loadImages() {
+            logOutput = '';
+            imagesContainer.innerHTML = '<p style="color: #999;">Loading...</p>';
+            console.log('=== Starting Image Loading Sequence ===\n');
+            console.log('Loading first image...');
+            
+            createImage('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800')
+                .then(function(img) {
+                    currentImage = img;
+                    console.log('First image loaded successfully!');
+                    console.log('Waiting 2 seconds...');
+                    return wait(2);
+                })
+                .then(function() {
+                    console.log('2 seconds passed!');
+                    if (currentImage) {
+                        currentImage.style.display = 'none';
+                        console.log('First image hidden');
+                    }
+                    console.log('\nLoading second image...');
+                    return createImage('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800');
+                })
+                .then(function(img) {
+                    currentImage = img;
+                    console.log('Second image loaded successfully!');
+                    console.log('Waiting 2 seconds...');
+                    return wait(2);
+                })
+                .then(function() {
+                    console.log('2 seconds passed!');
+                    if (currentImage) {
+                        currentImage.style.display = 'none';
+                        console.log('Second image hidden');
+                    }
+                    console.log('\n=== Image Loading Sequence Complete ===');
+                    outputDiv.textContent = logOutput;
+                })
+                .catch(function(error) {
+                    console.error(error.message);
+                    imagesContainer.innerHTML = `
+                        <div class="error">
+                            <h3>Error:</h3>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                    outputDiv.textContent = logOutput;
+                });
+        }
+        
+        function testError() {
+            logOutput = '';
+            imagesContainer.innerHTML = '<p style="color: #999;">Testing error handler...</p>';
+            console.log('=== Testing Error Handler ===\n');
+            
+            createImage('wrong-image-path.jpg')
+                .then(function(img) {
+                    console.log('Image loaded (this should not happen)');
+                })
+                .catch(function(error) {
+                    console.error(error.message);
+                    imagesContainer.innerHTML = `
+                        <div class="error">
+                            <h3>Error Handler Test:</h3>
+                            <p>${error.message}</p>
+                            <p>✅ Error handler is working correctly!</p>
+                        </div>
+                    `;
+                    outputDiv.textContent = logOutput;
+                });
+        }
+        
+        function clearImages() {
+            imagesContainer.innerHTML = '<p style="color: #999;">Images cleared</p>';
+            currentImage = null;
+            logOutput = '';
+            outputDiv.textContent = '';
+            console.log('Images cleared');
+        }
+        
+        console.log('Ready! Click "Load Images" to start.');
+        outputDiv.textContent = 'Ready! Click "Load Images" to start.';
+    </script>
+</body>
+</html>

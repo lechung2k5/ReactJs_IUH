@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car ES6 Class & EV Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .challenge {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 900px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Car Challenges - ES6 Class & Electric Car</h1>
+    
+    <div class="challenge">
+        <h2>Challenge #2: ES6 Class CarCl</h2>
+        <div>
+            <h3>Ford Controls:</h3>
+            <button onclick="fordCar.accelerate()">Accelerate</button>
+            <button onclick="fordCar.brake()">Brake</button>
+            <p>Current Speed: <strong id="ford-speed">120</strong> km/h</p>
+            <p>Current Speed: <strong id="ford-speed-us">75</strong> mi/h</p>
+            <div>
+                <label>Set speed in mi/h: </label>
+                <input type="number" id="speed-us-input" placeholder="Enter mi/h" value="75">
+                <button onclick="setSpeedUS()">Set Speed (mi/h)</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="challenge">
+        <h2>Challenge #3: Electric Car (EV)</h2>
+        <div>
+            <h3>Tesla Controls:</h3>
+            <button onclick="teslaEV.accelerate()">Accelerate</button>
+            <button onclick="teslaEV.brake()">Brake</button>
+            <button onclick="teslaEV.chargeBattery(90)">Charge to 90%</button>
+            <p>Current Speed: <strong id="tesla-speed">120</strong> km/h</p>
+            <p>Battery Charge: <strong id="tesla-charge">23</strong>%</p>
+        </div>
+    </div>
+    
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        let logOutput = '';
+        
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        console.log('=== CHALLENGE #2: ES6 CLASS ===\n');
+        
+        class CarCl {
+            constructor(make, speed) {
+                this.make = make;
+                this.speed = speed;
+            }
+            
+            accelerate() {
+                this.speed += 10;
+                console.log(`${this.make} is going at ${this.speed} km/h`);
+                this.updateDisplay();
+            }
+            
+            brake() {
+                this.speed -= 5;
+                if (this.speed < 0) this.speed = 0;
+                console.log(`${this.make} is going at ${this.speed} km/h`);
+                this.updateDisplay();
+            }
+            
+            get speedUS() {
+                return this.speed / 1.6;
+            }
+            
+            set speedUS(speedInMiH) {
+                this.speed = speedInMiH * 1.6;
+                console.log(`${this.make} speed set to ${this.speed} km/h (${speedInMiH} mi/h)`);
+                this.updateDisplay();
+            }
+            
+            updateDisplay() {
+                if (this.make === 'Ford') {
+                    document.getElementById('ford-speed').textContent = this.speed;
+                    document.getElementById('ford-speed-us').textContent = this.speedUS.toFixed(1);
+                }
+            }
+        }
+        
+        const fordCar = new CarCl('Ford', 120);
+        console.log(`Initial: ${fordCar.make} at ${fordCar.speed} km/h (${fordCar.speedUS.toFixed(1)} mi/h)`);
+        
+        console.log('\n=== Testing accelerate and brake ===');
+        fordCar.accelerate();
+        fordCar.brake();
+        
+        console.log('\n=== Testing getter speedUS ===');
+        console.log(`Current speed in mi/h: ${fordCar.speedUS.toFixed(1)}`);
+        
+        console.log('\n=== Testing setter speedUS ===');
+        fordCar.speedUS = 100;
+        console.log(`After setting to 100 mi/h: ${fordCar.speed} km/h`);
+        
+        function setSpeedUS() {
+            const input = document.getElementById('speed-us-input');
+            const speed = parseFloat(input.value);
+            if (!isNaN(speed)) {
+                fordCar.speedUS = speed;
+            }
+        }
+        
+        console.log('\n\n=== CHALLENGE #3: ELECTRIC CAR (EV) ===\n');
+        
+        function Car(make, speed) {
+            this.make = make;
+            this.speed = speed;
+        }
+        
+        Car.prototype.accelerate = function() {
+            this.speed += 10;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+        };
+        
+        Car.prototype.brake = function() {
+            this.speed -= 5;
+            if (this.speed < 0) this.speed = 0;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+        };
+        
+        function EV(make, speed, charge) {
+            Car.call(this, make, speed);
+            this.charge = charge;
+        }
+        
+        EV.prototype = Object.create(Car.prototype);
+        EV.prototype.constructor = EV;
+        
+        EV.prototype.chargeBattery = function(chargeTo) {
+            this.charge = chargeTo;
+            console.log(`${this.make} battery charged to ${this.charge}%`);
+            this.updateEVDisplay();
+        };
+        
+        EV.prototype.accelerate = function() {
+            this.speed += 20;
+            this.charge -= 1;
+            if (this.charge < 0) this.charge = 0;
+            console.log(`${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}%`);
+            this.updateEVDisplay();
+        };
+        
+        EV.prototype.brake = function() {
+            Car.prototype.brake.call(this);
+            this.updateEVDisplay();
+        };
+        
+        EV.prototype.updateEVDisplay = function() {
+            if (this.make === 'Tesla') {
+                document.getElementById('tesla-speed').textContent = this.speed;
+                document.getElementById('tesla-charge').textContent = this.charge;
+            }
+        };
+        
+        const teslaEV = new EV('Tesla', 120, 23);
+        console.log(`Initial: ${teslaEV.make} at ${teslaEV.speed} km/h, charge ${teslaEV.charge}%`);
+        
+        console.log('\n=== Testing accelerate (polymorphism) ===');
+        teslaEV.accelerate();
+        teslaEV.accelerate();
+        
+        console.log('\n=== Testing brake ===');
+        teslaEV.brake();
+        
+        console.log('\n=== Testing chargeBattery ===');
+        teslaEV.chargeBattery(90);
+        
+        console.log('\n=== Testing accelerate after charging ===');
+        teslaEV.accelerate();
+        
+        outputDiv.textContent = logOutput;
+    </script>
+</body>
+</html>

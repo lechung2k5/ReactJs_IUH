@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where Am I - Reverse Geocoding Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 800px;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 900px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .test-data {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .country-info {
+            background-color: #f1f8e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background-color: #ffebee;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <h1>Where Am I - Reverse Geocoding Challenge</h1>
+    
+    <div class="container">
+        <h2>Test Coordinates</h2>
+        <div class="test-data">
+            <p><strong>Test Data 1:</strong> 52.508, 13.381 (Berlin, Germany)</p>
+            <p><strong>Test Data 2:</strong> 19.037, 72.873 (Mumbai, India)</p>
+            <p><strong>Test Data 3:</strong> -33.933, 18.474 (Cape Town, South Africa)</p>
+            <p style="color: #d32f2f; margin-top: 10px;"><strong>⚠️ Important:</strong> Geocode.xyz API allows only 3 requests per second. Please wait at least 1 second between button clicks!</p>
+        </div>
+        <button onclick="testCoordinate1()">Test Coordinate 1</button>
+        <button onclick="testCoordinate2()">Test Coordinate 2</button>
+        <button onclick="testCoordinate3()">Test Coordinate 3</button>
+        <div id="result"></div>
+    </div>
+    
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        const resultDiv = document.getElementById('result');
+        let logOutput = '';
+        
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        console.error = function(...args) {
+            const message = args.join(' ');
+            logOutput += 'ERROR: ' + message + '\n';
+            originalError.apply(console, args);
+        };
+        
+        async function whereAmI(lat, lng) {
+            try {
+                const geoUrl = `https://geocode.xyz/${lat},${lng}?geoit=json`;
+                console.log(`Fetching geocoding data from: ${geoUrl}`);
+                
+                const geoResponse = await fetch(geoUrl);
+                
+                if (!geoResponse.ok) {
+                    throw new Error(`Geocoding API error! Status: ${geoResponse.status} - ${geoResponse.statusText}`);
+                }
+                
+                const geoData = await geoResponse.json();
+                console.log('Geocoding API Response:', geoData);
+                
+                if (geoData.error) {
+                    throw new Error(`Geocoding error: ${geoData.error.description || 'Unknown error'}`);
+                }
+                
+                const city = geoData.city || geoData.standard?.city || '';
+                const country = geoData.country || geoData.standard?.countryname || '';
+                
+                if (city.includes('Throttled') || country.includes('Throttled') || !city || !country || city === 'Unknown' || country === 'Unknown') {
+                    throw new Error(`API Rate Limit Exceeded! Geocode.xyz allows only 3 requests per second. Please wait a moment and try again. Response: ${city || 'Throttled'}`);
+                }
+                
+                console.log(`You are in ${city}, ${country}`);
+                
+                resultDiv.innerHTML = `
+                    <div class="country-info">
+                        <h3>Location Found:</h3>
+                        <p><strong>City:</strong> ${city}</p>
+                        <p><strong>Country:</strong> ${country}</p>
+                    </div>
+                `;
+                
+                const countryName = country;
+                console.log(`Fetching country data for: ${countryName}`);
+                
+                const countryUrl = `https://restcountries.com/v3.1/name/${countryName}`;
+                const countryResponse = await fetch(countryUrl);
+                
+                if (!countryResponse.ok) {
+                    throw new Error(`Countries API error! Status: ${countryResponse.status}`);
+                }
+                
+                const countryData = await countryResponse.json();
+                const countryInfo = countryData[0];
+                
+                console.log('Country Data:', countryInfo);
+                
+                resultDiv.innerHTML += `
+                    <div class="country-info">
+                        <h3>Country Information:</h3>
+                        <p><strong>Name:</strong> ${countryInfo.name.common}</p>
+                        <p><strong>Capital:</strong> ${countryInfo.capital ? countryInfo.capital[0] : 'N/A'}</p>
+                        <p><strong>Population:</strong> ${countryInfo.population.toLocaleString()}</p>
+                        <p><strong>Region:</strong> ${countryInfo.region}</p>
+                        <p><strong>Flag:</strong> ${countryInfo.flag}</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error(error.message);
+                const isThrottled = error.message.includes('Rate Limit') || error.message.includes('Throttled');
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>Error:</h3>
+                        <p>${error.message}</p>
+                        ${isThrottled ? `
+                            <p><strong>⚠️ Rate Limit Exceeded!</strong></p>
+                            <p>Geocode.xyz API allows only <strong>3 requests per second</strong>.</p>
+                            <p>Please wait at least <strong>1 second</strong> between requests and try again.</p>
+                            <p>If you're testing multiple coordinates, wait a few seconds between each test.</p>
+                        ` : `
+                            <p>Please check your internet connection and try again.</p>
+                        `}
+                    </div>
+                `;
+            }
+        }
+        
+        function testCoordinate1() {
+            logOutput = '';
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            console.log('=== Testing Coordinate 1: 52.508, 13.381 ===');
+            whereAmI(52.508, 13.381);
+            setTimeout(() => {
+                outputDiv.textContent = logOutput;
+            }, 2000);
+        }
+        
+        function testCoordinate2() {
+            logOutput = '';
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            console.log('=== Testing Coordinate 2: 19.037, 72.873 ===');
+            whereAmI(19.037, 72.873);
+            setTimeout(() => {
+                outputDiv.textContent = logOutput;
+            }, 2000);
+        }
+        
+        function testCoordinate3() {
+            logOutput = '';
+            resultDiv.innerHTML = '<p>Loading...</p>';
+            console.log('=== Testing Coordinate 3: -33.933, 18.474 ===');
+            whereAmI(-33.933, 18.474);
+            setTimeout(() => {
+                outputDiv.textContent = logOutput;
+            }, 2000);
+        }
+        
+        console.log('Ready to test coordinates!');
+        console.log('Click a button above to test a coordinate.');
+    </script>
+</body>
+</html>

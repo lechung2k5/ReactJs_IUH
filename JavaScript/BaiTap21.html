@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car OOP Challenge</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+            max-width: 800px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .car-controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e3f2fd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Car OOP Challenge - Constructor Function</h2>
+    <div class="car-controls">
+        <h3>BMW Controls:</h3>
+        <button onclick="car1.accelerate()">Accelerate BMW</button>
+        <button onclick="car1.brake()">Brake BMW</button>
+        <p id="bmw-speed">Current Speed: <strong id="bmw-speed-value">120</strong> km/h</p>
+    </div>
+    <div class="car-controls">
+        <h3>Mercedes Controls:</h3>
+        <button onclick="car2.accelerate()">Accelerate Mercedes</button>
+        <button onclick="car2.brake()">Brake Mercedes</button>
+        <p id="mercedes-speed">Current Speed: <strong id="mercedes-speed-value">95</strong> km/h</p>
+    </div>
+    <div id="output"></div>
+    <script>
+        const outputDiv = document.getElementById('output');
+        let logOutput = '';
+        
+        const originalLog = console.log;
+        console.log = function(...args) {
+            const message = args.join(' ');
+            logOutput += message + '\n';
+            originalLog.apply(console, args);
+        };
+        
+        function Car(make, speed) {
+            this.make = make;
+            this.speed = speed;
+        }
+        
+        Car.prototype.accelerate = function() {
+            this.speed += 10;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+            this.updateDisplay();
+        };
+        
+        Car.prototype.brake = function() {
+            this.speed -= 5;
+            if (this.speed < 0) this.speed = 0;
+            console.log(`${this.make} is going at ${this.speed} km/h`);
+            this.updateDisplay();
+        };
+        
+        Car.prototype.updateDisplay = function() {
+            if (this.make === 'BMW') {
+                document.getElementById('bmw-speed-value').textContent = this.speed;
+            } else if (this.make === 'Mercedes') {
+                document.getElementById('mercedes-speed-value').textContent = this.speed;
+            }
+        };
+        
+        const car1 = new Car('BMW', 120);
+        const car2 = new Car('Mercedes', 95);
+        
+        console.log('=== Initial State ===');
+        console.log(`Car 1: ${car1.make} at ${car1.speed} km/h`);
+        console.log(`Car 2: ${car2.make} at ${car2.speed} km/h`);
+        
+        console.log('\n=== Testing Car 1 (BMW) ===');
+        car1.accelerate();
+        car1.accelerate();
+        car1.brake();
+        
+        console.log('\n=== Testing Car 2 (Mercedes) ===');
+        car2.accelerate();
+        car2.brake();
+        car2.brake();
+        car2.accelerate();
+        
+        outputDiv.textContent = logOutput;
+    </script>
+</body>
+</html>

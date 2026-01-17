@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steven's Tip Calculator - Loop Version</title>
+</head>
+<body>
+    <h3>Single Bill Calculator</h3>
+    <label>Tổng bill</label>
+    <input type="number" id="priceBill">
+    <input type="button" value="Tính tip" id="btnResult" onclick="btnResult()">
+    <br><br>
+    <label>% tip</label>
+    <input type="text" id="percent" disabled>
+    <label>Tiền tip:</label>
+    <input type="text" id="result" disabled>
+    <label>Số tiền phải trả:</label>
+    <input type="text" id="total" disabled>
+
+    <script>
+        const calcTip = (billValue) => {
+            const bill = Number(billValue);
+            return (bill >= 50 && bill <= 300) ? bill * 0.15 : bill * 0.2;
+        };
+
+        const bills = [22, 295, 176, 440, 37, 105, 10, 1100, 86, 52];        
+        const tips = [];
+        const totals = [];
+        for (let i = 0; i < bills.length; i++) {
+            const tip = calcTip(bills[i]);
+            tips.push(tip); // Đẩy giá trị tip vào mảng
+            totals.push(tip + bills[i]); // Đẩy giá trị tổng vào mảng
+        }
+
+        console.log("--- KẾT QUẢ BATCH PROCESSING ---");
+        console.log("Bills:", bills);
+        console.log("Tips:", tips);
+        console.log("Totals:", totals);
+
+        // 5. Bonus: Hàm tính trung bình
+        const calcAverage = function(arr) {
+            let sum = 0;
+            for (let i = 0; i < arr.length; i++) {
+                sum += arr[i]; // Cộng dồn từng phần tử vào biến sum
+            }
+            return sum / arr.length; // Trả về trung bình cộng
+        }
+
+        // Gọi hàm tính trung bình cho mảng totals
+        const avgTotal = calcAverage(totals);
+        console.log(`Average Total: ${avgTotal.toFixed(2)}`);
+
+        // --- GIỮ LẠI LOGIC GIAO DIỆN CHO Ô INPUT ---
+        function btnResult() {
+            const bill = Number(document.getElementById("priceBill").value);
+            const tip = calcTip(bill);
+            const percentValue = (bill >= 50 && bill <= 300) ? 15 : 20;
+
+            document.getElementById("percent").value = percentValue + "%";
+            document.getElementById("result").value = tip.toFixed(2);
+            document.getElementById("total").value = (bill + tip).toFixed(2);
+        }
+    </script>
+</body>
+</html>
