@@ -1,0 +1,85 @@
+:root {
+  --sidebar-bg: #1e293b;
+  --main-bg: #f1f5f9;
+  --primary: #3b82f6;
+  --text-main: #334155;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--main-bg);
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--sidebar-bg);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  height: 100vh;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: var(--primary);
+  text-align: center;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-menu button {
+  padding: 12px 15px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.nav-menu button.active,
+.nav-menu button:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: white;
+}
+
+.nav-menu button.active {
+  background: var(--primary);
+}
+
+.main-layout {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+}
+
+.content-area {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.welcome-screen h2 ,p{
+  color: navy;
+}

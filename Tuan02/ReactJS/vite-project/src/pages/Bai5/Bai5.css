@@ -1,0 +1,65 @@
+.bai5-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 2rem;
+}
+
+.todos-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    width: 500px;
+}
+.todos-card h3, p{
+    color: navy;
+}
+.todo-item span {
+    font-size: 1.1rem;
+    color: #2d3436;
+    font-weight: 500;
+    flex: 1;
+    transition: all 0.3s ease;
+}
+.todo-item:hover span {
+    color: #4361ee;
+    transform: translateX(5px);
+}
+.todo-item .todo-id {
+    margin-right: 10px;
+    font-family: monospace;
+}
+.todo-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.todo-input input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    outline: none;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    transition: 0.3s;
+}
+
+.todo-item:hover {
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+.todo-item button {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}

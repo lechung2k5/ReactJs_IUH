@@ -1,0 +1,10 @@
+.todo-list span{
+    color: navy;
+}
+.todo-item button {
+    width: 80px;
+    height: 30px;
+    background-color: brown !important;
+    color: rgb(255, 255, 255);
+
+}

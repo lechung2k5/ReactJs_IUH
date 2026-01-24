@@ -1,0 +1,84 @@
+.student-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    max-width: 600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+}
+.student-card h3{
+    color: navy;
+    margin-right: 30px;
+}
+.student-card p{
+    color:#1a1c2e;
+    padding: 20px;
+    font-size: medium;
+    font-weight:600;
+}
+.profile-left {
+    background: linear-gradient(180deg, #4361ee 0%, #7209b7 100%);
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.student-card img {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 20px;
+    transition: var(--transition);
+}
+
+.student-card img:hover {
+    transform: scale(1.05);
+    border-color: #fff;
+}
+
+/* Phần bên phải: Thông tin chi tiết */
+.profile-right {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-right h3 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: #1a1c2e;
+    border-left: 5px solid var(--primary-color);
+    padding-left: 15px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.info-item label {
+    display: block;
+    font-size: 0.85rem;
+    color: #8d99ae;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.info-item span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2b2d42;
+}
