@@ -1,0 +1,23 @@
+@import "tailwindcss";
+@layer base {
+  button {
+    /* bg-blue-600: xanh nổi bật | shadow-lg: tạo độ nổi | transition: mượt */
+    @apply bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg shadow-blue-500/20 transition-all duration-200 hover:bg-blue-500 hover:scale-105 active:scale-95 border-none cursor-pointer;
+  }
+
+  /* Tránh làm hỏng các button trong Sidebar đã đẹp sẵn */
+  nav button {
+    @apply bg-transparent shadow-none;
+  }
+
+  input {
+    /* bg-slate-800: nền tối hơn Dashboard | border-slate-700: viền mảnh */
+    @apply bg-slate-800 border border-slate-700 text-white px-4 py-2 rounded-xl outline-none transition-all duration-200 placeholder:text-slate-500;
+  }
+
+  /* Hiệu ứng khi Chung nhấn vào ô nhập liệu (Focus) */
+  input:focus {
+    /* ring-2: tạo vòng sáng | ring-blue-500: màu xanh IUH */
+    @apply border-blue-500 ring-4 ring-blue-500/20 bg-slate-800/80;
+  }
+}
