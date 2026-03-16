@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "title": "Learn React",
+    "category": "frontend"
+  },
+  {
+    "id": 2,
+    "title": "Learn NodeJS",
+    "category": "backend"
+  },
+  {
+    "id": 3,
+    "title": "Learn CSS",
+    "category": "frontend"
+  },
+  {
+    "id": 4,
+    "title": "Learn MongoDB",
+    "category": "database"
+  },
+  {
+    "id": 5,
+    "title": "Learn Express",
+    "category": "backend"
+  }
+]
