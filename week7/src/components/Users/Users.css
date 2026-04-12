@@ -1,0 +1,24 @@
+.user-list {
+  padding: 1rem;
+  background-color: var(--card-bg, #fff);
+  border-radius: 8px;
+}
+
+.user-item {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.loader {
+  animation: rotate 1s infinite linear;
+  display: inline-block;
+}
+
+.error-message {
+  color: red;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
